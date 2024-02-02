@@ -1,9 +1,50 @@
-import { View } from "react-native";
+import { StyleSheet, TouchableWithoutFeedback, View } from "react-native";
+import Animated, {
+  SharedValue,
+  interpolate,
+  useAnimatedStyle,
+} from "react-native-reanimated";
 
-// import { Container } from './styles';
-
-const BackDrop: React.FC = () => {
-  return <View />;
+type IProps = {
+  topAnimation: SharedValue<number>;
+  openHeight: number;
+  closeHeight: number;
+  close: () => void;
 };
+
+const BackDrop: React.FC<IProps> = ({
+  close,
+  closeHeight,
+  openHeight,
+  topAnimation,
+}) => {
+  const backdropAnimation = useAnimatedStyle(() => {
+    const opacity = interpolate(
+      topAnimation.value,
+      [closeHeight, openHeight],
+      [0, 0.7]
+    );
+
+    const display = opacity === 0 ? "none" : "display";
+
+    const zIndex = opacity > 0 ? 111 : 0;
+
+    return { opacity, display, zIndex };
+  });
+
+  return (
+    <TouchableWithoutFeedback onPress={close}>
+      <Animated.View style={[styles.container, backdropAnimation]} />
+    </TouchableWithoutFeedback>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    ...StyleSheet.absoluteFillObject,
+    display: "none",
+    backgroundColor: "black",
+  },
+});
 
 export default BackDrop;

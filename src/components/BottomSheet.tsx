@@ -12,6 +12,7 @@ import Animated, {
   withSpring,
   withTiming,
 } from "react-native-reanimated";
+import BackDrop from "./BackDrop";
 
 const configWithSpring = { damping: 100, stiffness: 400 };
 
@@ -64,7 +65,6 @@ const BottomSheet = forwardRef<IBottomSheetMethods, IProps>(
 
     const pan = Gesture.Pan()
       .onBegin(() => {
-        console.log("begin");
         contextTopAnimation.value = topAnimation.value;
       })
       .onUpdate((e) => {
@@ -93,13 +93,20 @@ const BottomSheet = forwardRef<IBottomSheetMethods, IProps>(
       });
 
     return (
-      <GestureDetector gesture={pan}>
-        <Animated.View style={[styles.container, animationStyle]}>
-          <View style={styles.lineContainer}>
-            <View style={styles.line}></View>
-          </View>
-        </Animated.View>
-      </GestureDetector>
+      <>
+        <BackDrop
+          topAnimation={topAnimation}
+          closeHeight={closeHeight}
+          openHeight={openHeight}
+          close={close}
+        />
+
+        <GestureDetector gesture={pan}>
+          <Animated.View style={[styles.container, animationStyle]}>
+            <View style={styles.line} />
+          </Animated.View>
+        </GestureDetector>
+      </>
     );
   }
 );
@@ -110,9 +117,16 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
+    zIndex: 222,
   },
-  lineContainer: { alignItems: "center", marginVertical: 10 },
-  line: { width: 50, height: 4, backgroundColor: "black", borderRadius: 20 },
+  line: {
+    alignSelf: "center",
+    marginVertical: 10,
+    width: 50,
+    height: 4,
+    backgroundColor: "black",
+    borderRadius: 20,
+  },
 });
 
 export default BottomSheet;
