@@ -18,11 +18,15 @@ import BottomSheet, { IBottomSheetMethods } from "./src/components/BottomSheet";
 import ContentBottomSheetExample from "./src/components/example/ContentBottomSheetExample";
 import ExampleLoremText from "./src/components/example/ExampleLoremText";
 import BottomSheetScroll from "./src/components/BottomSheetScroll";
+import BottomSheetFlatlist from "./src/components/BottomSheetFlatlist";
+import data from "./src/data";
+import RenderItem from "./src/components/example/RenderItem";
 
 export default function App() {
   const bottomSheetRef = useRef<IBottomSheetMethods>(null);
   const bottomSheetExRef = useRef<IBottomSheetMethods>(null);
   const bottomSheetExScrollRef = useRef<IBottomSheetMethods>(null);
+  const bottomSheetExFlatlistRef = useRef<IBottomSheetMethods>(null);
 
   const expandHandler = useCallback(() => {
     bottomSheetRef?.current?.expand();
@@ -36,17 +40,21 @@ export default function App() {
     bottomSheetExScrollRef?.current?.expand();
   }, []);
 
+  const expandExFlatlistHandler = useCallback(() => {
+    bottomSheetExFlatlistRef?.current?.expand();
+  }, []);
+
   return (
     <SafeAreaProvider>
       <GestureHandlerRootView style={styles.wrapper}>
         <SafeAreaView style={styles.wrapper}>
           <View style={styles.container}>
             <TouchableOpacity style={styles.button} onPress={expandHandler}>
-              <Text style={styles.buttonText}>open</Text>
+              <Text style={styles.buttonText}>open ex blank</Text>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.button} onPress={expandExHandler}>
-              <Text style={styles.buttonText}>open ex</Text>
+              <Text style={styles.buttonText}>open ex content mock</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -54,6 +62,13 @@ export default function App() {
               onPress={expandExScrollHandler}
             >
               <Text style={styles.buttonText}>open ex scroll</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.button}
+              onPress={expandExFlatlistHandler}
+            >
+              <Text style={styles.buttonText}>open ex flalist</Text>
             </TouchableOpacity>
           </View>
 
@@ -66,6 +81,13 @@ export default function App() {
           <BottomSheetScroll ref={bottomSheetExScrollRef} snapTo="50%">
             <ExampleLoremText />
           </BottomSheetScroll>
+
+          <BottomSheetFlatlist
+            ref={bottomSheetExFlatlistRef}
+            snapTo="50%"
+            renderItem={RenderItem}
+            data={data}
+          />
 
           <StatusBar style="light" />
         </SafeAreaView>
