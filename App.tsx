@@ -15,11 +15,14 @@ import { StatusBar } from "expo-status-bar";
 import { useCallback, useRef } from "react";
 
 import BottomSheet, { IBottomSheetMethods } from "./src/components/BottomSheet";
-import ContentBottomSheetExample from "./src/components/ContentBottomSheetExample";
+import ContentBottomSheetExample from "./src/components/example/ContentBottomSheetExample";
+import ExampleLoremText from "./src/components/example/ExampleLoremText";
+import BottomSheetScroll from "./src/components/BottomSheetScroll";
 
 export default function App() {
   const bottomSheetRef = useRef<IBottomSheetMethods>(null);
   const bottomSheetExRef = useRef<IBottomSheetMethods>(null);
+  const bottomSheetExScrollRef = useRef<IBottomSheetMethods>(null);
 
   const expandHandler = useCallback(() => {
     bottomSheetRef?.current?.expand();
@@ -27,6 +30,10 @@ export default function App() {
 
   const expandExHandler = useCallback(() => {
     bottomSheetExRef?.current?.expand();
+  }, []);
+
+  const expandExScrollHandler = useCallback(() => {
+    bottomSheetExScrollRef?.current?.expand();
   }, []);
 
   return (
@@ -41,13 +48,24 @@ export default function App() {
             <TouchableOpacity style={styles.button} onPress={expandExHandler}>
               <Text style={styles.buttonText}>open ex</Text>
             </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.button}
+              onPress={expandExScrollHandler}
+            >
+              <Text style={styles.buttonText}>open ex scroll</Text>
+            </TouchableOpacity>
           </View>
 
           <BottomSheet ref={bottomSheetRef} snapTo="50%" />
 
-          <BottomSheet ref={bottomSheetExRef} snapTo="70%">
+          <BottomSheet ref={bottomSheetExRef} snapTo="75%">
             <ContentBottomSheetExample />
           </BottomSheet>
+
+          <BottomSheetScroll ref={bottomSheetExScrollRef} snapTo="50%">
+            <ExampleLoremText />
+          </BottomSheetScroll>
 
           <StatusBar style="light" />
         </SafeAreaView>

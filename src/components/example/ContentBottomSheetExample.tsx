@@ -1,13 +1,13 @@
 import {
   Image,
-  Pressable,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
   useWindowDimensions,
 } from "react-native";
 
-import ShoeImg from "../assets/Shoe.jpg";
+import ShoeImg from "../../assets/Shoe.jpg";
 
 const ContentBottomSheetExample: React.FC = () => {
   const { width } = useWindowDimensions();
@@ -24,11 +24,11 @@ const ContentBottomSheetExample: React.FC = () => {
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam blandit
         massa vitae dui volutpat,
       </Text>
-      <Pressable onPress={() => console.log("PRESS")}>
+      <TouchableOpacity onPress={() => console.log("PRESS")}>
         <View style={[styles.button, { width: width * 0.9 }]}>
           <Text style={styles.textButton}>Get Started</Text>
         </View>
-      </Pressable>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -39,7 +39,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    backgroundColor: "#ffe7cf",
   },
   imageContainer: {
     borderRadius: 16,

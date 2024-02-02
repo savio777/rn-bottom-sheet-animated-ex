@@ -14,6 +14,7 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import BackDrop from "./BackDrop";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const configWithSpring = { damping: 100, stiffness: 400 };
 
@@ -29,6 +30,7 @@ export type IBottomSheetMethods = {
 
 const BottomSheet = forwardRef<IBottomSheetMethods, IProps>(
   ({ snapTo, children }, ref) => {
+    const inset = useSafeAreaInsets();
     const { height } = Dimensions.get("screen");
 
     const closeHeight = height;
@@ -104,7 +106,15 @@ const BottomSheet = forwardRef<IBottomSheetMethods, IProps>(
         />
 
         <GestureDetector gesture={pan}>
-          <Animated.View style={[styles.container, animationStyle]}>
+          <Animated.View
+            style={[
+              styles.container,
+              animationStyle,
+              {
+                paddingBottom: inset.bottom,
+              },
+            ]}
+          >
             <View style={styles.line} />
 
             {children}
