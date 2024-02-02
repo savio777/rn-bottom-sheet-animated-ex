@@ -27,9 +27,7 @@ const BackDrop: React.FC<IProps> = ({
 
     const display = opacity === 0 ? "none" : "display";
 
-    const zIndex = opacity > 0 ? 111 : 0;
-
-    return { opacity, display, zIndex };
+    return { opacity, display };
   });
 
   return (

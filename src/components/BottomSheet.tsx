@@ -1,5 +1,6 @@
 import {
   ForwardRefRenderFunction,
+  ReactNode,
   forwardRef,
   useCallback,
   useImperativeHandle,
@@ -18,6 +19,7 @@ const configWithSpring = { damping: 100, stiffness: 400 };
 
 type IProps = {
   snapTo: string;
+  children?: ReactNode;
 };
 
 export type IBottomSheetMethods = {
@@ -26,7 +28,7 @@ export type IBottomSheetMethods = {
 };
 
 const BottomSheet = forwardRef<IBottomSheetMethods, IProps>(
-  ({ snapTo }, ref) => {
+  ({ snapTo, children }, ref) => {
     const { height } = Dimensions.get("screen");
 
     const closeHeight = height;
@@ -104,6 +106,8 @@ const BottomSheet = forwardRef<IBottomSheetMethods, IProps>(
         <GestureDetector gesture={pan}>
           <Animated.View style={[styles.container, animationStyle]}>
             <View style={styles.line} />
+
+            {children}
           </Animated.View>
         </GestureDetector>
       </>

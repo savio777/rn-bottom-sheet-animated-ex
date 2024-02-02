@@ -15,32 +15,39 @@ import { StatusBar } from "expo-status-bar";
 import { useCallback, useRef } from "react";
 
 import BottomSheet, { IBottomSheetMethods } from "./src/components/BottomSheet";
+import ContentBottomSheetExample from "./src/components/ContentBottomSheetExample";
 
 export default function App() {
   const bottomSheetRef = useRef<IBottomSheetMethods>(null);
+  const bottomSheetExRef = useRef<IBottomSheetMethods>(null);
 
   const expandHandler = useCallback(() => {
     bottomSheetRef?.current?.expand();
   }, []);
 
-  const closeHandler = useCallback(() => {
-    bottomSheetRef?.current?.close();
+  const expandExHandler = useCallback(() => {
+    bottomSheetExRef?.current?.expand();
   }, []);
 
   return (
     <SafeAreaProvider>
       <GestureHandlerRootView style={styles.wrapper}>
         <SafeAreaView style={styles.wrapper}>
-          <BottomSheet ref={bottomSheetRef} snapTo="50%" />
-
           <View style={styles.container}>
             <TouchableOpacity style={styles.button} onPress={expandHandler}>
               <Text style={styles.buttonText}>open</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.button} onPress={closeHandler}>
-              <Text style={styles.buttonText}>close</Text>
+
+            <TouchableOpacity style={styles.button} onPress={expandExHandler}>
+              <Text style={styles.buttonText}>open ex</Text>
             </TouchableOpacity>
           </View>
+
+          <BottomSheet ref={bottomSheetRef} snapTo="50%" />
+
+          <BottomSheet ref={bottomSheetExRef} snapTo="70%">
+            <ContentBottomSheetExample />
+          </BottomSheet>
 
           <StatusBar style="light" />
         </SafeAreaView>
@@ -55,7 +62,7 @@ const styles = StyleSheet.create({
     flex: 1,
     gap: 16,
     padding: 16,
-    paddingTop: 150,
+    paddingTop: 32,
   },
   button: {
     width: "100%",
