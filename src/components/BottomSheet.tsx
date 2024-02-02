@@ -5,11 +5,15 @@ import {
   useImperativeHandle,
 } from "react";
 import { Dimensions, StyleSheet, View } from "react-native";
+import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
+  withSpring,
   withTiming,
 } from "react-native-reanimated";
+
+const configWithSpring = { damping: 100, stiffness: 400 };
 
 type IProps = {
   snapTo: string;
@@ -29,6 +33,8 @@ const BottomSheet = forwardRef<IBottomSheetMethods, IProps>(
     const openHeight = height - height * percentage;
 
     const topAnimation = useSharedValue(closeHeight);
+    const contextTopAnimation = useSharedValue(0);
+
     const animationStyle = useAnimatedStyle(() => {
       const top = topAnimation.value;
 
@@ -56,12 +62,44 @@ const BottomSheet = forwardRef<IBottomSheetMethods, IProps>(
       [expand, close]
     );
 
+    const pan = Gesture.Pan()
+      .onBegin(() => {
+        console.log("begin");
+        contextTopAnimation.value = topAnimation.value;
+      })
+      .onUpdate((e) => {
+        const translationY = e.translationY;
+
+        // dont pass limit init height
+        if (translationY < 0) {
+          topAnimation.value = withSpring(openHeight, configWithSpring);
+
+          return;
+        }
+
+        topAnimation.value = withSpring(
+          translationY + contextTopAnimation.value,
+          configWithSpring
+        );
+      })
+      .onEnd(() => {
+        if (topAnimation.value > openHeight + 100) {
+          topAnimation.value = withSpring(closeHeight, configWithSpring);
+
+          return;
+        }
+
+        topAnimation.value = withSpring(openHeight, configWithSpring);
+      });
+
     return (
-      <Animated.View style={[styles.container, animationStyle]}>
-        <View style={styles.lineContainer}>
-          <View style={styles.line}></View>
-        </View>
-      </Animated.View>
+      <GestureDetector gesture={pan}>
+        <Animated.View style={[styles.container, animationStyle]}>
+          <View style={styles.lineContainer}>
+            <View style={styles.line}></View>
+          </View>
+        </Animated.View>
+      </GestureDetector>
     );
   }
 );
