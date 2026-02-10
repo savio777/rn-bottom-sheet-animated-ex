@@ -1,12 +1,13 @@
+/* eslint-disable react/display-name */
 import {
   ReactNode,
   forwardRef,
   useCallback,
   useImperativeHandle,
   useState,
-} from "react";
-import { Dimensions, StyleSheet, View } from "react-native";
-import { Gesture, GestureDetector } from "react-native-gesture-handler";
+} from 'react';
+import { Dimensions, StyleSheet, View } from 'react-native';
+import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
   AnimatedProps,
   AnimatedScrollViewProps,
@@ -16,10 +17,10 @@ import Animated, {
   useSharedValue,
   withSpring,
   withTiming,
-} from "react-native-reanimated";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+} from 'react-native-reanimated';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import BackDrop from "./BackDrop";
+import BackDrop from './BackDrop';
 
 const configWithSpring = { damping: 100, stiffness: 400 };
 
@@ -38,10 +39,11 @@ const BottomSheetScroll = forwardRef<
   IProps & AnimatedProps<AnimatedScrollViewProps>
 >(({ snapTo, children, ...rest }, ref) => {
   const inset = useSafeAreaInsets();
-  const { height } = Dimensions.get("screen");
-
-  const closeHeight = height;
-  const percentage = parseFloat(snapTo.replace("%", "")) / 100;
+  const { height } = Dimensions.get('screen');
+  // show only the handle when closed: reserve space for handle + safe area
+  const handleHeight = 120 + inset.bottom;
+  const closeHeight = height - handleHeight;
+  const percentage = parseFloat(snapTo.replace('%', '')) / 100;
   const openHeight = height - height * percentage;
 
   const topAnimation = useSharedValue(closeHeight);
@@ -60,12 +62,12 @@ const BottomSheetScroll = forwardRef<
   });
 
   const expand = useCallback(() => {
-    "worklet";
+    'worklet';
     topAnimation.value = withTiming(openHeight);
   }, [topAnimation, openHeight]);
 
   const close = useCallback(() => {
-    "worklet";
+    'worklet';
     topAnimation.value = withTiming(closeHeight);
   }, [topAnimation, closeHeight]);
 
@@ -75,7 +77,7 @@ const BottomSheetScroll = forwardRef<
       expand,
       close,
     }),
-    [expand, close]
+    [expand, close],
   );
 
   const pan = Gesture.Pan()
@@ -94,7 +96,7 @@ const BottomSheetScroll = forwardRef<
 
       topAnimation.value = withSpring(
         translationY + contextTopAnimation.value,
-        configWithSpring
+        configWithSpring,
       );
     })
     .onEnd(() => {
@@ -135,9 +137,9 @@ const BottomSheetScroll = forwardRef<
         topAnimation.value = withSpring(
           Math.max(
             contextTopAnimation.value + translationY - scrollBegin.value,
-            openHeight
+            openHeight,
           ),
-          configWithSpring
+          configWithSpring,
         );
       }
     })
@@ -198,17 +200,18 @@ const BottomSheetScroll = forwardRef<
 const styles = StyleSheet.create({
   container: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: "white",
+    backgroundColor: 'white',
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     zIndex: 222,
   },
   line: {
-    alignSelf: "center",
-    marginVertical: 10,
+    alignSelf: 'center',
+    marginTop: 12,
+    marginBottom: 20,
     width: 50,
     height: 4,
-    backgroundColor: "black",
+    backgroundColor: '#EEEEEE',
     borderRadius: 20,
   },
 });

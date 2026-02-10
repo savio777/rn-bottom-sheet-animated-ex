@@ -1,9 +1,9 @@
-import { StyleSheet, TouchableWithoutFeedback, View } from "react-native";
+import { StyleSheet, TouchableWithoutFeedback } from 'react-native';
 import Animated, {
   SharedValue,
   interpolate,
   useAnimatedStyle,
-} from "react-native-reanimated";
+} from 'react-native-reanimated';
 
 type IProps = {
   topAnimation: SharedValue<number>;
@@ -22,10 +22,11 @@ const BackDrop: React.FC<IProps> = ({
     const opacity = interpolate(
       topAnimation.value,
       [closeHeight, openHeight],
-      [0, 0.7]
+      [0, 0.7],
     );
 
-    const display = opacity === 0 ? "none" : "display";
+    // hide the backdrop when the sheet is at (or very near) the closed position
+    const display = topAnimation.value >= closeHeight - 0.5 ? 'none' : 'flex';
 
     return { opacity, display };
   });
@@ -40,8 +41,8 @@ const BackDrop: React.FC<IProps> = ({
 const styles = StyleSheet.create({
   container: {
     ...StyleSheet.absoluteFillObject,
-    display: "none",
-    backgroundColor: "black",
+    display: 'none',
+    backgroundColor: 'black',
   },
 });
 

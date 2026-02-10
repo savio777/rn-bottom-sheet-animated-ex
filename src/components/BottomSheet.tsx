@@ -1,20 +1,16 @@
-import {
-  ForwardRefRenderFunction,
-  ReactNode,
-  forwardRef,
-  useCallback,
-  useImperativeHandle,
-} from "react";
-import { Dimensions, StyleSheet, View } from "react-native";
-import { Gesture, GestureDetector } from "react-native-gesture-handler";
+/* eslint-disable react/display-name */
+
+import { ReactNode, forwardRef, useCallback, useImperativeHandle } from 'react';
+import { Dimensions, StyleSheet, View } from 'react-native';
+import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withSpring,
   withTiming,
-} from "react-native-reanimated";
-import BackDrop from "./BackDrop";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+} from 'react-native-reanimated';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import BackDrop from './BackDrop';
 
 const configWithSpring = { damping: 100, stiffness: 400 };
 
@@ -31,10 +27,12 @@ export type IBottomSheetMethods = {
 const BottomSheet = forwardRef<IBottomSheetMethods, IProps>(
   ({ snapTo, children }, ref) => {
     const inset = useSafeAreaInsets();
-    const { height } = Dimensions.get("screen");
+    const { height } = Dimensions.get('screen');
 
-    const closeHeight = height;
-    const percentage = parseFloat(snapTo.replace("%", "")) / 100;
+    // show only the handle when closed: reserve space for handle + safe area
+    const handleHeight = 120 + inset.bottom;
+    const closeHeight = height - handleHeight;
+    const percentage = parseFloat(snapTo.replace('%', '')) / 100;
     const openHeight = height - height * percentage;
 
     const topAnimation = useSharedValue(closeHeight);
@@ -49,12 +47,12 @@ const BottomSheet = forwardRef<IBottomSheetMethods, IProps>(
     });
 
     const expand = useCallback(() => {
-      "worklet";
+      'worklet';
       topAnimation.value = withTiming(openHeight);
     }, [topAnimation, openHeight]);
 
     const close = useCallback(() => {
-      "worklet";
+      'worklet';
       topAnimation.value = withTiming(closeHeight);
     }, [topAnimation, closeHeight]);
 
@@ -64,7 +62,7 @@ const BottomSheet = forwardRef<IBottomSheetMethods, IProps>(
         expand,
         close,
       }),
-      [expand, close]
+      [expand, close],
     );
 
     const pan = Gesture.Pan()
@@ -83,7 +81,7 @@ const BottomSheet = forwardRef<IBottomSheetMethods, IProps>(
 
         topAnimation.value = withSpring(
           translationY + contextTopAnimation.value,
-          configWithSpring
+          configWithSpring,
         );
       })
       .onEnd(() => {
@@ -122,23 +120,24 @@ const BottomSheet = forwardRef<IBottomSheetMethods, IProps>(
         </GestureDetector>
       </>
     );
-  }
+  },
 );
 
 const styles = StyleSheet.create({
   container: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: "white",
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
+    backgroundColor: 'white',
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
     zIndex: 222,
   },
   line: {
-    alignSelf: "center",
-    marginVertical: 10,
+    alignSelf: 'center',
+    marginTop: 12,
+    marginBottom: 20,
     width: 50,
     height: 4,
-    backgroundColor: "black",
+    backgroundColor: '#EEEEEE',
     borderRadius: 20,
   },
 });
